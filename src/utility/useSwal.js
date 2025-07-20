@@ -17,10 +17,10 @@ export function useSwal() {
   }
   const showError = async (message) => {
     return await showAlert({
-      title: 'Error Enchountered',
+      title: 'Hata!',
       text: message,
       icon: 'error',
-      position: 'top-end',
+      position: 'top',
       showConfirmButton: false,
       timer: 1500,
     })

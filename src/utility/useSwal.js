@@ -28,14 +28,14 @@ export function useSwal() {
 
   const showConfirm = async (message) => {
     return await showAlert({
-      title: 'Are you sure?',
+      title: 'Değişiklikleri kaydetmek istiyor musunuz?',
       text: message,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
+      confirmButtonText: 'Kaydet!',
+      cancelButtonText: 'Değiştirme!',
     })
   }
   return {

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/Home.vue'
-import Game from '@/views/home/Game.vue'
+import Game from '@/views/home/mainGame.vue'
+import Admin from '@/views/admin/Admin.vue'
 import { ROUTE_NAMES } from '@/constants/routeNames.js'
 
 
@@ -16,6 +17,11 @@ const router = createRouter({
       path: '/game',
       component: Game,
       name: ROUTE_NAMES.GAME,
+    },
+    {
+      path: '/admin',
+      component: Admin,
+      name: ROUTE_NAMES.ADMIN,
     },
 
   ],

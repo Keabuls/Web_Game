@@ -1,99 +1,60 @@
 <template>
   <div class="admin-container">
-
-    <div class="container-fluid">
-      <h2>OYUNLAR</h2> <hr>
-    <Games></Games>
-    <br>
-      <h2>ÖDÜLLER</h2> <hr>
-      
+    <div class="m-5 p-2 border border-dark position-relative">
+      <form @submit.prevent="handleSubmit">
+        <div class="container-fluid">
+          <h2>OYUNLAR</h2>
+          <hr />
+          <Games @game-selected="handleGameSelection"></Games>
+          <br />
+          <h2>ÖDÜLLER</h2>
+          <hr />
+          <Prizes @prize-selected="handlePrizeSelection"></Prizes>
+        </div>
+        <button 
+          type="submit" 
+          class="btn btn-secondary position-absolute bottom-0 end-0 m-2"
+          :disabled="!selectedGame || !selectedPrize"
+        >
+          Kaydet
+        </button>
+      </form>
     </div>
-</div>
-
-    <!-- Diğer componentler -->
-
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import Games from '@/components/Games/games.vue'
-import { useSwal } from '@/utility/useSwal.js'
-const { showSuccess, showError, showConfirm } = useSwal()
+import Prizes from '@/components/Prizes/prizes.vue'
 
-// Oyun verileri
-const games = reactive([
-  { 
-    id: 1, 
-    name: 'Futbol Manager', 
-    description: 'Futbol takımını ',
-    category: 'Spor',
-    createdAt: '2024-01-15',
-    isFavourite: true
-  },
-  { 
-    id: 2, 
-    name: 'Strateji Savaşı', 
-    description: 'Ordunu kurarak düşmanları yen',
-    category: 'Strateji',
-    createdAt: '2024-01-10',
-    isFavourite: false
-  },
-  { 
-    id: 3, 
-    name: 'Puzzle Master', 
-    description: 'Zeka oyunları ile beynini geliştir',
-    category: 'Puzzle',
-    createdAt: '2024-01-20',
-    isFavourite: true
-  },
-  { 
-    id: 4, 
-    name: 'Yarış Heyecanı', 
-    description: 'Hızlı arabalarla yarışa katıl',
-    category: 'Yarış',
-    createdAt: '2024-01-12',
-    isFavourite: false
-  },
-  { 
-    id: 5, 
-    name: 'Macera Adası', 
-    description: 'Gizemli adada hazineleri keşfet',
-    category: 'Macera',
-    createdAt: '2024-01-18',
-    isFavourite: false
-  },
-  { 
-    id: 6, 
-    name: 'Kart Ustası', 
-    description: 'Kartlarla rakiplerini alt et',
-    category: 'Kart',
-    createdAt: '2024-01-22',
-    isFavourite: false
-  }
-])
+// Seçilen game ve prize için ref'ler
+const selectedGame = ref(null)
+const selectedPrize = ref(null)
 
-// Favorilere ekleme fonksiyonu
-const addToFavourite = (gameId) => {
-  const game = games.find(g => g.id === gameId)
-  console.log(game)
-  if (game) {
-    game.isFavourite = !game.isFavourite
-    
-    if (game.isFavourite) {
-      console.log(`${game.name} favorilere eklendi!`)
-      // Burada API çağrısı yapabilirsin
-      // await addGameToFavourites(gameId)
-      
-      // Toast notification gösterebilirsin
-      showSuccess(`${game.name} favorilere eklendi!`)
-    } else {
-    showSuccess(`${game.name} favorilerden çıkarıldı!`)
-      // await removeGameFromFavourites(gameId)
+const Result = reactive({
+  game: null,
+  prize: null
+})
 
-    }
-  }
+// Games componentinden gelen seçim
+const handleGameSelection = (game) => {
+  selectedGame.value = game
+  Result.game = game
 }
 
+// Prizes componentinden gelen seçim
+const handlePrizeSelection = (prize) => {
+  selectedPrize.value = prize
+  Result.prize = prize
+}
+
+const handleSubmit = () => {
+  if (selectedGame.value && selectedPrize.value) {
+    console.log("Oyun: ",Result.game.name,"|Ödül: ", Result.prize.id)
+
+  }
+}
 </script>
 
 <style scoped>
@@ -107,14 +68,6 @@ const addToFavourite = (gameId) => {
   white-space: nowrap;
 }
 
-.card {
-  transition: all 0.2s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
 
 .btn-warning {
   background-color: #ffc107;
@@ -134,5 +87,10 @@ h2 {
 
 .badge {
   font-size: 0.75em;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>

@@ -5,18 +5,20 @@
       :key="game.id"
       class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3"
     >
-      <div class="card h-100 border">
+      <div
+        class="card h-100 border"
+        :class="{ 'selected-card': selectedGameId === game.id }"
+        @click="selectGame(game)"
+        style="cursor: pointer"
+      >
         <div class="card-body d-flex flex-column">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h5 class="card-title mb-0">{{ game.name }}</h5>
-            <button
-              @click="addToFavourite(game.id)"
-              class="btn btn-sm btn-outline-secondary rounded-pill"
-              :class="{ 'btn-warning': game.isFavourite }"
-
-            >
-              <i class="bi bi-star-fill"></i>
-            </button>
+            <div class="d-flex gap-2 align-items-center">
+              <div v-if="selectedGameId === game.id" class="text-success">
+                <i class="bi bi-check-circle-fill fs-5"></i>
+              </div>
+            </div>
           </div>
           <p class="card-text text-truncate mb-3">{{ game.description }}</p>
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -30,23 +32,28 @@
               class="btn btn-success fs-6 py-2 px-4 btn-sm"
               data-bs-toggle="modal"
               :data-bs-target="`#productDetailModel-${game.id}`"
+              @click.stop
             >
-              <i class="bi bi-card-list"></i> View Details
+              <i class="bi bi-gear"></i> Ayarlar
             </button>
           </div>
         </div>
       </div>
-        <gameDetail :product="game"></gameDetail>
+      <gameDetail :product="game"></gameDetail>
     </div>
-    <!-- Diğer componentler -->
   </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { useSwal } from '@/utility/useSwal.js'
-const { showSuccess, showError, showConfirm } = useSwal()
 import gameDetail from './gameDetail.vue'
+
+// Emit tanımı
+const emit = defineEmits(['game-selected'])
+
+// Seçili oyun ID'si
+const selectedGameId = ref(null)
 
 // Oyun verileri
 const games = reactive([
@@ -56,7 +63,6 @@ const games = reactive([
     description: 'Futbol takımını ',
     category: 'Spor',
     createdAt: '2024-01-15',
-    isFavourite: "",
     winRate: 0.75,
     playTime: 120,
   },
@@ -66,8 +72,7 @@ const games = reactive([
     description: 'Ordunu kurarak düşmanları yen',
     category: 'Strateji',
     createdAt: '2024-01-10',
-    isFavourite: "",
-        winRate: 0.75,
+    winRate: 0.75,
     playTime: 120,
   },
   {
@@ -76,8 +81,7 @@ const games = reactive([
     description: 'Zeka oyunları ile beynini geliştir',
     category: 'Puzzle',
     createdAt: '2024-01-20',
-    isFavourite: true,
-        winRate: 0.75,
+    winRate: 0.75,
     playTime: 120,
   },
   {
@@ -86,8 +90,7 @@ const games = reactive([
     description: 'Hızlı arabalarla yarışa katıl',
     category: 'Yarış',
     createdAt: '2024-01-12',
-    isFavourite: false,
-        winRate: 0.75,
+    winRate: 0.75,
     playTime: 120,
   },
   {
@@ -96,8 +99,7 @@ const games = reactive([
     description: 'Gizemli adada hazineleri keşfet',
     category: 'Macera',
     createdAt: '2024-01-18',
-    isFavourite: false,
-        winRate: 0.75,
+    winRate: 0.75,
     playTime: 120,
   },
   {
@@ -106,31 +108,14 @@ const games = reactive([
     description: 'Kartlarla rakiplerini alt et',
     category: 'Kart',
     createdAt: '2024-01-22',
-    isFavourite: false,
-        winRate: 0.75,
+    winRate: 0.75,
     playTime: 120,
   },
 ])
 
-// Favorilere ekleme fonksiyonu
-const addToFavourite = (gameId) => {
-  const game = games.find((g) => g.id === gameId)
-  console.log(game)
-  if (game) {
-    game.isFavourite = !game.isFavourite
-
-    if (game.isFavourite) {
-      console.log(`${game.name} favorilere eklendi!`)
-      // Burada API çağrısı yapabilirsin
-      // await addGameToFavourites(gameId)
-
-      // Toast notification gösterebilirsin
-      showSuccess(`${game.name} favorilere eklendi!`)
-    } else {
-      showSuccess(`${game.name} favorilerden çıkarıldı!`)
-      // await removeGameFromFavourites(gameId)
-    }
-  }
+const selectGame = (game) => {
+  selectedGameId.value = game.id
+  emit('game-selected', game)
 }
 </script>
 
@@ -152,6 +137,11 @@ const addToFavourite = (gameId) => {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.selected-card {
+  border: 2px solid #28a745 !important;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
 }
 
 .btn-warning {

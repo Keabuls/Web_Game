@@ -1,6 +1,7 @@
 <template>
+  <Header></Header>
   <div class="admin-container">
-    <div class="m-5 p-2 border border-dark position-relative">
+    <div class="mb-5 p-2 border border-dark position-relative">
       <form @submit.prevent="handleSubmit">
         <div class="container-fluid">
           <h2>OYUNLAR</h2>
@@ -27,6 +28,7 @@
 import { ref, reactive } from 'vue'
 import Games from '@/components/Games/games.vue'
 import Prizes from '@/components/Prizes/prizes.vue'
+import Header from '@/components/layout/Header.vue'
 
 // Seçilen game ve prize için ref'ler
 const selectedGame = ref(null)

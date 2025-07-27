@@ -37,7 +37,7 @@
           </div>         
         </div>       
       </div>        
-      <prizeDetail :product="prize"></prizeDetail>     
+      <prizeDetail @product-selected="handleProductSelection" :product="prize"></prizeDetail>     
     </div>        
   </div>   
 </template>  
@@ -48,9 +48,18 @@ import prizeDetail from './prizeDetail.vue'
 
 // Emit tanımı
 const emit = defineEmits(['prize-selected'])
-
-// Seçili ödül ID'si
 const selectedPrizeId = ref(null)
+const selectPrize = (prize) => {
+  selectedPrizeId.value = prize.id
+  emit('prize-selected', prize)
+}
+
+
+const handleProductSelection = (selectedProduct) => {
+ prizes.prizeId = selectedProduct
+}
+
+
 
 // Ödül verileri 
 const prizes = reactive([   
@@ -59,22 +68,20 @@ const prizes = reactive([
     name: 'Ödül',     
     description: 'İşletmeden bir ödül',     
     category: 'Ürün',     
-    count: 1,   
+    count: 1,
+    prizeId:1,
+
   },   
   {     
     id: 2,     
     name: 'İndirim',     
     description: 'İşletmeden bir indirim',     
     category: 'İndirim',     
-    discountRate: 20,    
+    discountRate: 20,
   }, 
 ])  
 
-// Ödül seçme fonksiyonu
-const selectPrize = (prize) => {
-  selectedPrizeId.value = prize.id
-  emit('prize-selected', prize)
-}
+
 </script>  
 
 <style scoped> 

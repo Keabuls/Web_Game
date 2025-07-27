@@ -179,18 +179,19 @@
 <script setup>
 import { defineProps, reactive, ref } from 'vue'
 import { useSwal } from '@/utility/useSwal.js'
+const emit = defineEmits(['product-selected'])
 
 const { showSuccess, showError, showConfirm } = useSwal()
 
-const selectedProduct = ref(null)
 
 const handleSubmit = () => {
   showConfirm('Değişiklikleri kaydetmek istediğinize emin misiniz?')
 }
 
-const selectProduct = (productId) => {
-  selectedProduct.value = productId
+const selectProduct = (product) => {
+  emit('product-selected', product)
 }
+
 
 const productPrize = reactive([
   {
